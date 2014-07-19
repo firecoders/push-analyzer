@@ -24,6 +24,8 @@ import subprocess
 from datetime import datetime
 import re
 
+from settings import args
+
 def utc_timestamp ():
     return datetime.utcnow ().timestamp ()
 
@@ -38,8 +40,6 @@ class cd:
 
     def __exit__ ( self, etype, value, traceback ):
         os.chdir ( self.savedPath )
-
-from settings import *
 
 # Run system commands
 

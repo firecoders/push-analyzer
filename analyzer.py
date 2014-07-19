@@ -20,7 +20,7 @@
 # THE SOFTWARE.
 
 from utils import *
-from settings import *
+from settings import args
 
 results = Signal ()
 

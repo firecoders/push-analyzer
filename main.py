@@ -24,7 +24,7 @@
 import pathlib
 
 from utils import *
-from settings import *
+from settings import args, folder
 import poll
 import analyzer
 

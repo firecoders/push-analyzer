@@ -21,7 +21,7 @@
 
 import time
 
-from settings import *
+from settings import args, folder
 from utils import *
 
 revisions = {}
