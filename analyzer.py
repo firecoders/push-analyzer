@@ -19,26 +19,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from utils import *
+import utils
 from settings import args
 
-results = Signal ()
+results = utils.Signal ()
 
 def analyze_ref_change ( sha_pre, sha_post, ref_name ):
     changes = []
     changes_overview = []
 
-    removals = get_log ( sha_post + b'..' + sha_pre )
+    removals = utils.get_log ( sha_post + b'..' + sha_pre )
     removals.reverse ()
 
-    additions = get_log ( sha_pre + b'..' + sha_post )
+    additions = utils.get_log ( sha_pre + b'..' + sha_post )
     additions.reverse ()
 
     moves = []
     for ( added_sha, _ ) in additions:
-        added_diff = get_diff ( added_sha )
+        added_diff = utils.get_diff ( added_sha )
         for ( removed_sha, _ ) in removals:
-            if added_diff == get_diff ( removed_sha ):
+            if added_diff == utils.get_diff ( removed_sha ):
                 moves.append ( { 'from' : removed_sha.decode (), 'to' : added_sha.decode () } )
 
     for ( sha, msg ) in removals:
@@ -63,7 +63,7 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
         else:
             changes.append ( { 'type' : 'add', 'sha' : sha.decode (), 'msg' : msg.decode () } )
 
-    if get_diff ( sha_pre, sha_post ).decode () == '':
+    if utils.get_diff ( sha_pre, sha_post ).decode () == '':
         changes_overview.append ( 'same overall diff' )
 
     for change in changes:
@@ -91,7 +91,7 @@ def analyze_push ( refs_pre, refs_post ):
         if key not in refs_pre:
             results ( { 'type' : 'create branch', 'name' : key.decode () } )
             sha_post = refs_post [ key ]
-            sha_pre = get_best_ancestor ( refs_pre.values (), sha_post )
+            sha_pre = utils.get_best_ancestor ( refs_pre.values (), sha_post )
             if sha_post != sha_pre:
                 analyze_ref_change ( sha_pre, sha_post, key )
         else: # key in refs_pre

@@ -23,8 +23,6 @@ import argparse
 import os.path
 import re
 
-from utils import *
-
 def parse_args ():
     parser = argparse.ArgumentParser ( description = 'Analyze changes to a git repository.' )
     parser.add_argument ( 'url', help = 'URL to the repository' )

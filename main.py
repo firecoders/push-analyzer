@@ -23,7 +23,7 @@
 
 import pathlib
 
-from utils import *
+import utils
 from settings import args, folder
 import poll
 import analyzer
@@ -40,8 +40,8 @@ poll.ref_change.subscribe ( analyze )
 analyzer.results.subscribe ( print_formatted )
 
 if __name__ == "__main__":
-    run_command ( [ 'mkdir', '-p', args.directory ] )
+    utils.run_command ( [ 'mkdir', '-p', args.directory ] )
     if not pathlib.Path ( args.directory + folder ).exists ():
-        with cd ( args.directory ):
-            run_command ( [ 'git', 'clone', args.url ] )
+        with utils.cd ( args.directory ):
+            utils.run_command ( [ 'git', 'clone', args.url ] )
     poll.loop ()
