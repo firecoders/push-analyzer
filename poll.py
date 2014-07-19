@@ -39,7 +39,7 @@ def poll ():
     utils.run_command ( [ 'git', 'remote', 'update' ] )
     utils.run_command ( [ 'git', 'remote', 'prune', 'origin' ] )
     ref_dict = utils.build_ref_dict ()
-    if last ( list ( [ revisions [ key ] for key in sorted ( revisions.keys () ) ] ) ) != ref_dict:
+    if latest_refs () != ref_dict:
         handle_change ( ref_dict )
 
 def loop ():
@@ -48,7 +48,10 @@ def loop ():
             poll ()
         time.sleep ( args.interval )
 
+def latest_refs ():
+    return last ( [ revisions [ key ] for key in sorted ( revisions.keys () ) ] )
+
 def last ( lst ):
     if len ( lst ) == 0:
         return None
-    return lst [ len ( lst ) - 1 ]
+    return lst [ -1 ]

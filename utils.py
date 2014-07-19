@@ -95,11 +95,14 @@ def get_diff ( tree_ish, second = None ):
         command.append ( second )
     return run_command ( command, ret = 'output' )
 
+def is_ancestor ( commit, of ):
+    return run_command ( [ 'git', 'merge-base', '--is-ancestor', of, commit ] ) == 0
+
 def get_best_ancestor ( ref_list, commit ):
     current = None
     for ref in ref_list:
         res = run_command ( [ 'git', 'merge-base', ref, commit ], ret = 'output' )
-        if not current or run_command ( [ 'git', 'merge-base', '--is-ancestor', res, current ] ):
+        if not current or is_ancestor ( res, current ):
             current = res
     return current
 

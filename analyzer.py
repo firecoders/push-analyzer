@@ -67,7 +67,7 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
         changes_overview.append ( 'same overall diff' )
 
     for change in changes:
-        if changes_overview.count ( change [ 'type' ] ) == 0:
+        if change [ 'type' ] not in changes_overview:
             changes_overview.append ( change [ 'type' ] )
 
     if len ( removals ) > 0:
