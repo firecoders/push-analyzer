@@ -42,18 +42,12 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
                 moves.append ( { 'from' : removed_sha.decode (), 'to' : added_sha.decode () } )
 
     for ( sha, msg ) in removals:
-        moved = False
-        for m in moves:
-            if m [ 'from' ] == sha.decode ():
-                moved = True
+        moved = any ( move [ 'from' ] == sha.decode () for move in moves )
         if not moved:
             changes.append ( { 'type' : 'remove', 'sha' : sha.decode (), 'msg' : msg.decode () } )
 
     for ( sha, msg ) in additions:
-        move = None
-        for m in moves:
-            if m [ 'to' ] == sha.decode ():
-                move = m
+        move = next ( ( m for m in moves if m [ 'to' ] == sha.decode () ), None )
         if move:
             changes.append ( {
                 'type' : 'move',
