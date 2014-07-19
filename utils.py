@@ -29,6 +29,8 @@ from settings import args
 def utc_timestamp ():
     return datetime.utcnow ().timestamp ()
 
+# System interaction
+
 class cd:
     """Context manager for changing the current working directory"""
     def __init__ ( self, newPath ):
@@ -40,8 +42,6 @@ class cd:
 
     def __exit__ ( self, etype, value, traceback ):
         os.chdir ( self.savedPath )
-
-# Run system commands
 
 def run_command ( command, ret = 'exit_code' ):
     r = None
@@ -102,6 +102,8 @@ def get_best_ancestor ( ref_list, commit ):
         if not current or run_command ( [ 'git', 'merge-base', '--is-ancestor', res, current ] ):
             current = res
     return current
+
+# Observer pattern
 
 class Signal:
     def __init__ ( self ):
