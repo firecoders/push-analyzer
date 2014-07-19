@@ -24,10 +24,6 @@ import subprocess
 from datetime import datetime
 import re
 
-def error ( string ):
-    print ( string )
-    exit ( 1 )
-
 def utc_timestamp ():
     return datetime.utcnow ().timestamp ()
 
@@ -74,7 +70,7 @@ def build_ref_dict ():
     for line in output:
         match = regex.match ( line )
         if not match:
-            error ( 'failed to match regex on `git show-ref` output line' )
+            raise Exception ( 'failed to match regex on `git show-ref` output line' )
         ref_dict [ match.group ( 2 ) ] = match.group ( 1 )
     if args.verbosity >= 2:
         print ( "Parsed references: " + str ( ref_dict ) )
@@ -87,7 +83,7 @@ def get_log ( revision_range ):
     for line in output:
         match = regex.match ( line )
         if not match:
-            error ( 'failed to match regex on `git rev-list --pretty=oneline` output line' )
+            raise Exception ( 'failed to match regex on `git rev-list --pretty=oneline` output line' )
         log.append ( ( match.group ( 1 ), match.group ( 2 ) ) )
     if args.verbosity >= 2:
         print ( "Parsed log: " + str ( log ) )

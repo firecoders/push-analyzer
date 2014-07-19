@@ -37,7 +37,7 @@ def parse_args ():
 def repo_folder ( url ):
     match = re.match( r".*/([^\.]*)", url )
     if not match:
-        error ( "Not a valid git repository" )
+        raise Exception ( "Not a valid git repository" )
     else:
         return match.group ( 1 )
 
