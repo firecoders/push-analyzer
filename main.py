@@ -22,7 +22,6 @@
 # THE SOFTWARE.
 
 import pathlib
-import threading
 
 from utils import *
 from settings import *
@@ -45,4 +44,4 @@ if __name__ == "__main__":
     if not pathlib.Path ( args.directory + folder ).exists ():
         with cd ( args.directory ):
             run_command ( [ 'git', 'clone', args.url ] )
-    threading.Thread ( target = poll.loop ).start ()
+    poll.loop ()
