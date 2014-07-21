@@ -76,18 +76,16 @@ def build_ref_dict ():
         print ( "Parsed references: " + str ( ref_dict ) )
     return ref_dict
 
-def get_log ( revision_range ):
-    log = []
-    output = popen ( [ 'git', 'rev-list', '--pretty=oneline', revision_range ], stdout = subprocess.PIPE ).stdout
-    regex = re.compile ( br"([A-Za-z0-9]{40}) (.*)" )
+def get_sha_range ( revision_range ):
+    shas = []
+    output = popen ( [ 'git', 'rev-list', '--pretty=oneline', '--reverse', revision_range ], stdout = subprocess.PIPE ).stdout
+    regex = re.compile ( br"([A-Za-z0-9]{40})" )
     for line in output:
         match = regex.match ( line )
         if not match:
             raise Exception ( 'failed to match regex on `git rev-list --pretty=oneline` output line' )
-        log.append ( ( match.group ( 1 ), match.group ( 2 ) ) )
-    if args.verbosity >= 2:
-        print ( "Parsed log: " + str ( log ) )
-    return log
+        shas.append ( match.group ( 1 ) )
+    return shas
 
 def get_diff ( tree_ish, second = None ):
     command = [ 'git', 'diff-tree', '-p', '--no-commit-id', tree_ish ]

@@ -28,34 +28,27 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
     changes = []
     changes_overview = []
 
-    removals = utils.get_log ( sha_post + b'..' + sha_pre )
-    removals.reverse ()
-
-    additions = utils.get_log ( sha_pre + b'..' + sha_post )
-    additions.reverse ()
+    removals = utils.get_sha_range ( sha_post + b'..' + sha_pre )
+    additions = utils.get_sha_range ( sha_pre + b'..' + sha_post )
 
     moves = []
-    for ( added_sha, _ ) in additions:
+    for added_sha in additions:
         added_diff = utils.get_diff ( added_sha )
-        for ( removed_sha, _ ) in removals:
+        for removed_sha in removals:
             if added_diff == utils.get_diff ( removed_sha ):
                 moves.append ( { 'from' : removed_sha.decode (), 'to' : added_sha.decode () } )
 
-    for ( sha, msg ) in removals:
+    for sha in removals:
         moved = any ( move [ 'from' ] == sha.decode () for move in moves )
         if not moved:
-            changes.append ( { 'type' : 'remove', 'sha' : sha.decode (), 'msg' : msg.decode () } )
+            changes.append ( { 'type' : 'remove', 'sha' : sha.decode () } )
 
-    for ( sha, msg ) in additions:
+    for sha in additions:
         move = next ( ( m for m in moves if m [ 'to' ] == sha.decode () ), None )
         if move:
-            changes.append ( {
-                'type' : 'move',
-                'from' : move [ 'from' ], 'to' : move [ 'to' ],
-                'msg' : msg.decode ()
-            } )
+            changes.append ( { 'type' : 'move', 'from' : move [ 'from' ], 'to' : move [ 'to' ] } )
         else:
-            changes.append ( { 'type' : 'add', 'sha' : sha.decode (), 'msg' : msg.decode () } )
+            changes.append ( { 'type' : 'add', 'sha' : sha.decode () } )
 
     if utils.get_diff ( sha_pre, sha_post ).decode () == '':
         changes_overview.append ( 'same overall diff' )
