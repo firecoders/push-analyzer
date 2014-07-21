@@ -25,9 +25,6 @@ from settings import args
 results = utils.Signal ()
 
 def analyze_ref_change ( sha_pre, sha_post, ref_name ):
-    changes = []
-    changes_overview = []
-
     removals = utils.get_sha_range ( sha_post + b'..' + sha_pre )
     additions = utils.get_sha_range ( sha_pre + b'..' + sha_post )
 
@@ -37,6 +34,8 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
         for removed_sha in removals:
             if added_diff == utils.get_diff ( removed_sha ):
                 moves.append ( { 'from' : removed_sha.decode (), 'to' : added_sha.decode () } )
+
+    changes = []
 
     for sha in removals:
         moved = any ( move [ 'from' ] == sha.decode () for move in moves )
@@ -50,12 +49,14 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
         else:
             changes.append ( { 'type' : 'add', 'sha' : sha.decode () } )
 
-    if utils.get_diff ( sha_pre, sha_post ).decode () == '':
-        changes_overview.append ( 'same overall diff' )
+    changes_overview = []
 
     for change in changes:
         if change [ 'type' ] not in changes_overview:
             changes_overview.append ( change [ 'type' ] )
+
+    if utils.get_diff ( sha_pre, sha_post ).decode () == '':
+        changes_overview.append ( 'same overall diff' )
 
     if len ( removals ) > 0:
         type_field = 'forced update'
