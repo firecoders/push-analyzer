@@ -36,11 +36,11 @@ def handle_change ( refs_post ):
         ref_change ( stamp_pre, stamp_post )
 
 def poll ():
-    utils.run_command ( [ 'git', 'remote', 'update' ] )
-    utils.run_command ( [ 'git', 'remote', 'prune', 'origin' ] )
     ref_dict = utils.build_ref_dict ()
     if latest_refs () != ref_dict:
         handle_change ( ref_dict )
+    utils.run_command ( [ 'git', 'remote', 'update' ] )
+    utils.run_command ( [ 'git', 'remote', 'prune', 'origin' ] )
 
 def loop ():
     while True:
