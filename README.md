@@ -1,6 +1,6 @@
 # Push analyzer
 
-A script for analyzing git pushes.
+A script for analyzing git pushes. This project is licensed under MIT.
 
 ## Why this is useful to me
 
