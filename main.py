@@ -25,8 +25,10 @@ import pathlib
 
 import utils
 from settings import args, folder
-import poll
+import poller
 import analyzer
+
+poll = poller.Poller ( args.url, work_dir = args.directory, interval = args.interval )
 
 def analyze ( stamp_pre, stamp_post ):
     refs_pre = poll.revisions [ stamp_pre ]

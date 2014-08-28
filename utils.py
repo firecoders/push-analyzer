@@ -29,6 +29,20 @@ from settings import args
 def utc_timestamp ():
     return datetime.utcnow ().timestamp ()
 
+def last ( lst ):
+    if len ( lst ) == 0:
+        return None
+    return lst [ -1 ]
+
+def extract_repo_name ( url ):
+    match = re.match( r".*/([^\.]*)", url )
+    if not match:
+        raise Exception ( "Not a valid git repository" )
+    else:
+        return match.group ( 1 )
+
+home_directory = os.path.expanduser ( '~' )
+
 # System interaction
 
 class cd:

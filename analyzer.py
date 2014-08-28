@@ -20,7 +20,6 @@
 # THE SOFTWARE.
 
 import utils
-from settings import args
 
 results = utils.Signal ()
 
