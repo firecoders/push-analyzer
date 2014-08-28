@@ -22,8 +22,6 @@
 from . import utils
 from .utils import git
 
-results = utils.Signal ()
-
 def analyze_ref_change ( sha_pre, sha_post, ref_name ):
     removals = utils.git.get_sha_range ( sha_post + b'..' + sha_pre )
     additions = utils.git.get_sha_range ( sha_pre + b'..' + sha_post )
@@ -62,28 +60,37 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
         type_field = 'forced update'
     else:
         type_field = 'update'
-    results ( {
+
+    results = []
+
+    results.append ( {
         'type' : type_field, 'changes' : changes_overview,
         'name' : ref_name.decode (),
         'from' : sha_pre.decode (), 'to' : sha_post.decode ()
     } )
 
     for change in changes:
-        results ( change )
+        results.append ( change )
+
+    return results
 
 def analyze_push ( refs_pre, refs_post ):
+    results = []
+
     for key in refs_pre.keys ():
         if key not in refs_post:
-            results ( { 'type' : 'remove branch', 'name' : key.decode () } )
+            results.append ( { 'type' : 'remove branch', 'name' : key.decode () } )
     for key in refs_post.keys ():
         if key not in refs_pre:
-            results ( { 'type' : 'create branch', 'name' : key.decode () } )
+            results.append ( { 'type' : 'create branch', 'name' : key.decode () } )
             sha_post = refs_post [ key ]
             sha_pre = utils.git.get_best_ancestor ( refs_pre.values (), sha_post )
             if sha_post != sha_pre:
-                analyze_ref_change ( sha_pre, sha_post, key )
+                results.extend ( analyze_ref_change ( sha_pre, sha_post, key ) )
         else: # key in refs_pre
             sha_pre = refs_pre [ key ]
             sha_post = refs_post [ key ]
             if sha_pre != sha_post:
-                analyze_ref_change ( sha_pre, sha_post, key )
+                results.extend ( analyze_ref_change ( sha_pre, sha_post, key ) )
+
+    return results
