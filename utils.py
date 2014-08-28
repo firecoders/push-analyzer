@@ -24,8 +24,6 @@ import subprocess
 from datetime import datetime
 import re
 
-from settings import args
-
 def utc_timestamp ():
     return datetime.utcnow ().timestamp ()
 
@@ -59,20 +57,14 @@ class cd:
 
 def run_command ( command, ret = 'exit_code' ):
     r = None
-    if args.verbosity >= 1:
-        print ( "Running command: " + str ( command ) )
     if ret == 'exit_code':
         r = subprocess.call ( command, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL )
     if ret == 'output':
         r = subprocess.check_output ( command, stderr = subprocess.DEVNULL )
         r = r.rstrip ( b'\n' )
-    if args.verbosity >= 2:
-        print ( "Returning: " + str ( r ) )
     return r
 
 def popen ( command, *args_forward, **keyargs ):
-    if args.verbosity >= 1:
-        print ( "Running command: " + str ( command ) )
     return subprocess.Popen ( command, *args_forward, **keyargs )
 
 # Git interaction
@@ -86,8 +78,6 @@ def build_ref_dict ():
         if not match:
             raise Exception ( 'failed to match regex on `git show-ref` output line' )
         ref_dict [ match.group ( 2 ) ] = match.group ( 1 )
-    if args.verbosity >= 2:
-        print ( "Parsed references: " + str ( ref_dict ) )
     return ref_dict
 
 def get_sha_range ( revision_range ):
