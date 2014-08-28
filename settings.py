@@ -23,8 +23,6 @@ import argparse
 import os.path
 import re
 
-from utils import *
-
 def parse_args ():
     parser = argparse.ArgumentParser ( description = 'Analyze changes to a git repository.' )
     parser.add_argument ( 'url', help = 'URL to the repository' )
@@ -37,7 +35,7 @@ def parse_args ():
 def repo_folder ( url ):
     match = re.match( r".*/([^\.]*)", url )
     if not match:
-        error ( "Not a valid git repository" )
+        raise Exception ( "Not a valid git repository" )
     else:
         return match.group ( 1 )
 

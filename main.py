@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 # push-analyzer, A script for analyzing git pushes
 # Copyright (c) 2014 firecoders
@@ -22,10 +22,9 @@
 # THE SOFTWARE.
 
 import pathlib
-import threading
 
-from utils import *
-from settings import *
+import utils
+from settings import args, folder
 import poll
 import analyzer
 
@@ -41,8 +40,8 @@ poll.ref_change.subscribe ( analyze )
 analyzer.results.subscribe ( print_formatted )
 
 if __name__ == "__main__":
-    run_command ( [ 'mkdir', '-p', args.directory ] )
+    utils.run_command ( [ 'mkdir', '-p', args.directory ] )
     if not pathlib.Path ( args.directory + folder ).exists ():
-        with cd ( args.directory ):
-            run_command ( [ 'git', 'clone', args.url ] )
-    threading.Thread ( target = poll.loop ).start ()
+        with utils.cd ( args.directory ):
+            utils.run_command ( [ 'git', 'clone', args.url ] )
+    poll.loop ()
