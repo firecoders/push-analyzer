@@ -1,4 +1,4 @@
-# push-analyzer, A script for analyzing git pushes
+# push_analzyer, A library for analyzing git pushes
 # Copyright (c) 2014 firecoders
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy

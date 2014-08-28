@@ -1,12 +1,12 @@
 # Push analyzer
 
-A script for analyzing git pushes. This project is licensed under MIT.
+A library for analyzing git pushes. This project is licensed under MIT.
 
 ## Why this is useful to me
 
 I don't quite like the review system github gives you. You pretty much only see
 what changes are in a certain branch, but not what changed when someone pushed.
-This script analyzes changes to a repository and gives you some nice
+This library analyzes changes to a repository and gives you some nice
 information.
 
 ## Features
@@ -25,4 +25,4 @@ observer pattern. The formatter currently just prints out the dicts.
 
 ## Plans
 
-This script is designed to collect information which an irc bot could broadcast.
+This library is designed to collect information which an irc bot could broadcast.

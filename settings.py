@@ -1,4 +1,4 @@
-# push-analyzer, A script for analyzing git pushes
+# push_analzyer, A library for analyzing git pushes
 # Copyright (c) 2014 firecoders
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -29,7 +29,7 @@ def parse_args ():
     parser.add_argument ( '-i', '--interval', type = float, default = 20, help = 'The interval in which to poll' )
     parser.add_argument ( '-v', '--verbose', dest='verbosity', action = 'count', default = 0 )
     home_directory = os.path.expanduser ( '~' )
-    parser.add_argument ( '-d', '--directory', default = home_directory + '/push-analyzer/', help = 'The directory to work in' )
+    parser.add_argument ( '-d', '--directory', default = home_directory + '/push_analzyer/', help = 'The directory to work in' )
     return parser.parse_args ()
 
 def repo_folder ( url ):
