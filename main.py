@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python3
 
 # push-analyzer, A script for analyzing git pushes
 # Copyright (c) 2014 firecoders
