@@ -19,19 +19,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import utils
+import utils.git
 
 results = utils.Signal ()
 
 def analyze_ref_change ( sha_pre, sha_post, ref_name ):
-    removals = utils.get_sha_range ( sha_post + b'..' + sha_pre )
-    additions = utils.get_sha_range ( sha_pre + b'..' + sha_post )
+    removals = utils.git.get_sha_range ( sha_post + b'..' + sha_pre )
+    additions = utils.git.get_sha_range ( sha_pre + b'..' + sha_post )
 
     moves = []
     for added_sha in additions:
-        added_diff = utils.get_diff ( added_sha )
+        added_diff = utils.git.get_diff ( added_sha )
         for removed_sha in removals:
-            if added_diff == utils.get_diff ( removed_sha ):
+            if added_diff == utils.git.get_diff ( removed_sha ):
                 moves.append ( { 'from' : removed_sha.decode (), 'to' : added_sha.decode () } )
 
     changes = []
@@ -54,7 +54,7 @@ def analyze_ref_change ( sha_pre, sha_post, ref_name ):
         if change [ 'type' ] not in changes_overview:
             changes_overview.append ( change [ 'type' ] )
 
-    if utils.get_diff ( sha_pre, sha_post ).decode () == '':
+    if utils.git.get_diff ( sha_pre, sha_post ).decode () == '':
         changes_overview.append ( 'same overall diff' )
 
     if len ( removals ) > 0:
@@ -78,7 +78,7 @@ def analyze_push ( refs_pre, refs_post ):
         if key not in refs_pre:
             results ( { 'type' : 'create branch', 'name' : key.decode () } )
             sha_post = refs_post [ key ]
-            sha_pre = utils.get_best_ancestor ( refs_pre.values (), sha_post )
+            sha_pre = utils.git.get_best_ancestor ( refs_pre.values (), sha_post )
             if sha_post != sha_pre:
                 analyze_ref_change ( sha_pre, sha_post, key )
         else: # key in refs_pre
