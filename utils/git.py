@@ -22,7 +22,8 @@
 import subprocess
 import re
 
-import utils.system
+from .. import utils
+from ..utils import system
 
 # Git interaction
 

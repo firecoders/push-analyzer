@@ -22,10 +22,11 @@
 import time
 import pathlib
 
-import utils.misc
-import utils.system
-import utils.git
-import utils.observer
+from . import utils
+from .utils import misc
+from .utils import system
+from .utils import git
+from .utils import observer
 
 class Poller:
     def __init__ ( self, url, work_dir = utils.misc.home_directory + '/push_analzyer/' , interval = 20 ):
