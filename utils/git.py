@@ -30,7 +30,7 @@ from ..utils import system
 def build_ref_dict ():
     ref_dict = {}
     output = utils.system.popen ( [ 'git', 'show-ref' ], stdout = subprocess.PIPE ).stdout
-    regex = re.compile ( br"([A-Za-z0-9]{40}) refs/(?:heads/|remotes/)(\S*)" )
+    regex = re.compile ( br"([A-Za-z0-9]{40}) refs/(?:.*/)(\S*)" )
     for line in output:
         match = regex.match ( line )
         if not match:
@@ -77,7 +77,7 @@ def get_best_ancestor ( ref_list, commit ):
     return current
 
 def extract_repo_name ( url ):
-    match = re.match( r".*/([^\.]*)", url )
+    match = re.match( r".*/(.*?)(\.git)?$", url )
     if not match:
         raise Exception ( "Not a valid git repository" )
     else:
