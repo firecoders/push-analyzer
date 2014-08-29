@@ -55,6 +55,16 @@ def get_diff ( tree_ish, second = None ):
         command.append ( second )
     return utils.system.run_command ( command, ret = 'output' )
 
+message_cache = {}
+
+def get_message ( commit ):
+    if commit in message_cache.keys ():
+        return message_cache [ commit ]
+    output = utils.system.run_command ( [ 'git', 'rev-list', '--pretty=oneline', '-n 1', commit ], ret = 'output' )
+    msg = re.match ( br"[A-Za-z0-9]{40} (.*)$", output ).group ( 1 ).decode ()
+    message_cache [ commit ] = msg
+    return msg
+
 def is_ancestor ( commit, of ):
     return utils.system.run_command ( [ 'git', 'merge-base', '--is-ancestor', of, commit ] ) == 0
 
