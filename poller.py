@@ -20,6 +20,7 @@
 # THE SOFTWARE.
 
 import time
+import pathlib
 
 import utils
 
@@ -28,8 +29,11 @@ class Poller:
         self.revisions = {}
         self.ref_change = utils.Signal ()
         self.repo_name = utils.extract_repo_name ( url )
+
         self.repo_dir = work_dir + self.repo_name
         self.interval = interval
+        self.work_dir = work_dir
+        self.url = url
 
     def handle_change ( self, refs_post ):
         stamp_pre = utils.last ( sorted ( self.revisions.keys () ) )
@@ -46,6 +50,10 @@ class Poller:
         utils.run_command ( [ 'git', 'remote', 'prune', 'origin' ] )
 
     def loop ( self ):
+        utils.system.run_command ( [ 'mkdir', '-p', self.work_dir ] )
+        if not pathlib.Path ( self.repo_dir ).exists ():
+            with utils.system.cd ( self.work_dir ):
+                utils.system.run_command ( [ 'git', 'clone', self.url ] )
         while True:
             with utils.cd ( self.repo_dir ):
                 self.poll ()

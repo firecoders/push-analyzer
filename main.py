@@ -21,8 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import pathlib
-
 import utils
 from settings import args, folder
 import poller
@@ -42,8 +40,4 @@ poll.ref_change.subscribe ( analyze )
 analyzer.results.subscribe ( print_formatted )
 
 if __name__ == "__main__":
-    utils.run_command ( [ 'mkdir', '-p', args.directory ] )
-    if not pathlib.Path ( args.directory + folder ).exists ():
-        with utils.cd ( args.directory ):
-            utils.run_command ( [ 'git', 'clone', args.url ] )
     poll.loop ()
