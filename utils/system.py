@@ -1,4 +1,4 @@
-# push-analyzer, A script for analyzing git pushes
+# push_analyzer, A library for analyzing git pushes
 # Copyright (c) 2014 firecoders
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,25 +19,33 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import argparse
-import os.path
-import re
+import os
+import subprocess
+import threading
 
-def parse_args ():
-    parser = argparse.ArgumentParser ( description = 'Analyze changes to a git repository.' )
-    parser.add_argument ( 'url', help = 'URL to the repository' )
-    parser.add_argument ( '-i', '--interval', type = float, default = 20, help = 'The interval in which to poll' )
-    parser.add_argument ( '-v', '--verbose', dest='verbosity', action = 'count', default = 0 )
-    home_directory = os.path.expanduser ( '~' )
-    parser.add_argument ( '-d', '--directory', default = home_directory + '/push-analyzer/', help = 'The directory to work in' )
-    return parser.parse_args ()
+class cd:
+    """Context manager for changing the current working directory"""
+    lock = threading.RLock ()
+    def __init__ ( self, newPath ):
+        self.newPath = newPath
 
-def repo_folder ( url ):
-    match = re.match( r".*/([^\.]*)", url )
-    if not match:
-        raise Exception ( "Not a valid git repository" )
-    else:
-        return match.group ( 1 )
+    def __enter__ ( self ):
+        self.lock.acquire ()
+        self.savedPath = os.getcwd ()
+        os.chdir ( self.newPath )
 
-args = parse_args ()
-folder = repo_folder ( args.url )
+    def __exit__ ( self, etype, value, traceback ):
+        os.chdir ( self.savedPath )
+        self.lock.release ()
+
+def run_command ( command, ret = 'exit_code' ):
+    r = None
+    if ret == 'exit_code':
+        r = subprocess.call ( command, stdout = subprocess.DEVNULL, stderr = subprocess.DEVNULL )
+    if ret == 'output':
+        r = subprocess.check_output ( command, stderr = subprocess.DEVNULL )
+        r = r.rstrip ( b'\n' )
+    return r
+
+def popen ( command, *args_forward, **keyargs ):
+    return subprocess.Popen ( command, *args_forward, **keyargs )

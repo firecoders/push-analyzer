@@ -1,4 +1,4 @@
-# push-analyzer, A script for analyzing git pushes
+# push_analyzer, A library for analyzing git pushes
 # Copyright (c) 2014 firecoders
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,39 +19,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import time
+class Signal:
+    def __init__ ( self ):
+        self.subscribers = []
 
-from settings import args, folder
-import utils
+    def subscribe ( self, subscriber ):
+        self.subscribers.append ( subscriber )
 
-revisions = {}
+    def unsubscribe ( self, subscriber ):
+        self.subscribers.remove ( subscriber )
 
-ref_change = utils.Signal ()
-
-def handle_change ( refs_post ):
-    stamp_pre = last ( sorted ( revisions.keys () ) )
-    stamp_post = utils.utc_timestamp ()
-    revisions [ stamp_post ] = refs_post
-    if stamp_pre != None:
-        ref_change ( stamp_pre, stamp_post )
-
-def poll ():
-    ref_dict = utils.build_ref_dict ()
-    if latest_refs () != ref_dict:
-        handle_change ( ref_dict )
-    utils.run_command ( [ 'git', 'remote', 'update' ] )
-    utils.run_command ( [ 'git', 'remote', 'prune', 'origin' ] )
-
-def loop ():
-    while True:
-        with utils.cd ( args.directory + folder ):
-            poll ()
-        time.sleep ( args.interval )
-
-def latest_refs ():
-    return last ( [ revisions [ key ] for key in sorted ( revisions.keys () ) ] )
-
-def last ( lst ):
-    if len ( lst ) == 0:
-        return None
-    return lst [ -1 ]
+    def __call__ ( self, *args, **kwargs ):
+        for subscriber in self.subscribers:
+            subscriber ( *args, **kwargs )

@@ -1,6 +1,4 @@
-#!/usr/bin/env python3
-
-# push-analyzer, A script for analyzing git pushes
+# push_analyzer, A library for analyzing git pushes
 # Copyright (c) 2014 firecoders
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,27 +19,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import pathlib
+import os
+from datetime import datetime
+import re
 
-import utils
-from settings import args, folder
-import poll
-import analyzer
+def utc_timestamp ():
+    return datetime.utcnow ().timestamp ()
 
-def analyze ( stamp_pre, stamp_post ):
-    refs_pre = poll.revisions [ stamp_pre ]
-    refs_post = poll.revisions [ stamp_post ]
-    analyzer.analyze_push ( refs_pre, refs_post )
+def last ( lst ):
+    if len ( lst ) == 0:
+        return None
+    return lst [ -1 ]
 
-def print_formatted ( result ):
-    print ( result )
-
-poll.ref_change.subscribe ( analyze )
-analyzer.results.subscribe ( print_formatted )
-
-if __name__ == "__main__":
-    utils.run_command ( [ 'mkdir', '-p', args.directory ] )
-    if not pathlib.Path ( args.directory + folder ).exists ():
-        with utils.cd ( args.directory ):
-            utils.run_command ( [ 'git', 'clone', args.url ] )
-    poll.loop ()
+home_directory = os.path.expanduser ( '~' )
