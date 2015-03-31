@@ -2,12 +2,17 @@
 
 A library for analyzing git pushes. This project is licensed under MIT.
 
-## Why this is useful to me
+## Why this could be useful
 
-I don't quite like the review system github gives you. You pretty much only see
-what changes are in a certain branch, but not what changed when someone pushed.
-This library analyzes changes to a repository and gives you some nice
-information.
+If you want to know what others changed when they pushed (especially when they
+altered history), it can get annoying to look at individual commits youself to
+figure out which commit was renamed etc. This library can monitor a repository
+and output the analysis outcomes.
+
+Also have a look at [gitter][], a bot which broadcasts analysis outcomes to irc
+channels.
+
+[gitter]: https://github.com/shak-mar/gitter
 
 ## Features
 
@@ -22,7 +27,3 @@ Currently, it can:
 
 The analyze results are stored in dicts, and sent to the formatter via the
 observer pattern. The formatter currently just prints out the dicts.
-
-## Plans
-
-This library is designed to collect information which an irc bot could broadcast.
